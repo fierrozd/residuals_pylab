@@ -68,8 +68,8 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     for i in range(len(x)):
         print len(alpha),len(color),len(marker),len(color)
         print i, color[i],alpha[i], marker[i], len(x)
-
-        if not(err[i]==None):
+        
+        if err and not (err[i]==None):
             if scatter[i]:
                 ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], fmt='.')            
             else:
