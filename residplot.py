@@ -20,7 +20,7 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     majorLocatorx   = MultipleLocator(1.0)
     majorFormattery = FormatStrFormatter('%d')
     majorFormatterx = FormatStrFormatter('%d')
-    majorFormatterresy = FormatStrFormatter('%.2f')    
+    majorFormatterresy = FormatStrFormatter('%.1f')    
     top_offset = .07
     left_offset = .15
     right_offset = .2
@@ -46,31 +46,36 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     pl.setp(ax1.get_xticklabels(),
             visible=False)    
     
+    if not isinstance(x, list):
+        try: 
+            print len(xs)
+        except:
+            x=  [x]
+            y=  [y]
+            res=[res]
+            scatter=[scatter]
+            print scatter
+            if err:
+                err=err[i]
 
-    xs=x.shape
-    print xs
-    try: len(xs)
-    except:
-        x=[x]
-        y=[y]
-        res=[res]
-        scatter=[scatter]
-        if err:
-            err=err[i]
+
     if len(alpha)<len(x):
         alpha=alpha*len(x)
     if len(color)<len(x):
         color=color*len(x)
+    if len(marker)<len(x):
+        marker=marker*len(x)
     for i in range(len(x)):
-        print i, color[i],alpha[i], marker[i]
+        print len(alpha),len(color),len(marker),len(color)
+        print i, color[i],alpha[i], marker[i], len(x)
 
-        if err:
+        if not(err[i]==None):
             if scatter[i]:
                 ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], fmt='.')            
             else:
                 ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i])                            
         elif scatter[i]:
-            print "here",x[i],y[i]
+#            print "here",x[i],y[i]
             ax1.scatter(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i])
         else:
             ax1.plot(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i]) 
