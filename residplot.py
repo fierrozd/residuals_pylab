@@ -6,11 +6,14 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib as mpl
 
 import pylab as pl
-def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=None,ylim=None,color=['k'],alpha=[1], marker=['o'], scatter=True,LIVE=False):
+def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=None,ylim=None,color=['k'],alpha=[1], marker=['o'], scatter=True,LIVE=False, fig=None):
 
     if LIVE:
         pl.ion()
-    
+    if not (fig==None):
+        fig=pl.figure(fig)
+    else:
+        fig=pl.figure()
     mpl.rcParams['font.size'] = 18.
     mpl.rcParams['font.family'] = 'Times New Roman'
     #    mpl.rcParams['font.serif'] = 'Times'                                                                                                       
@@ -100,3 +103,4 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     axres.yaxis.set_major_formatter(majorFormatterresy)
 
 #    pl.show()
+    return(fig)
