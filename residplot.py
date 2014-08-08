@@ -48,8 +48,8 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     axres.minorticks_on()    
     pl.setp(ax1.get_xticklabels(),
             visible=False)    
-    
-    if not isinstance(x, list):
+    import numpy as np
+    if (not isinstance(x, list) or not isinstance(x[0], list)) and (not isinstance(x, np.ndarray ) or not (isinstance(x[0], list) or isinstance(x[0], np.ndarray))):
         try: 
             print len(xs)
         except:
@@ -61,7 +61,6 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
             if err:
                 err=err[i]
 
-
     if len(alpha)<len(x):
         alpha=alpha*len(x)
     if len(color)<len(x):
@@ -69,9 +68,6 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     if len(marker)<len(x):
         marker=marker*len(x)
     for i in range(len(x)):
-        print len(alpha),len(color),len(marker),len(color)
-        print i, color[i],alpha[i], marker[i], len(x)
-        
         if err and not (err[i]==None):
             if scatter[i]:
                 ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], fmt='.')            
