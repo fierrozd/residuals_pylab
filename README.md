@@ -35,7 +35,7 @@ res1=(y1-np.sin(x1))
 
 plotwresids(x,y,res,xlabel= "fake data",ylabel="sin-ish", legend="made up stuff")
 
-plotwresids([x,x1],[y,y1],[res,res1],err=[None,np.sqrt(np.sin(x1))],xlabel= "fake data",ylabel="sin-ish",scatter=[True,True], color=['SteelBlue','DarkOrange'], legend=["madeup stuff","more madeup stuff"])
+plotwresids([x,x1],[y,y1],[res,res1],err=[None,np.sqrt(np.abs(np.sin(x1)))],xlabel= "fake data",ylabel="sin-ish",scatter=[True,True], color=['SteelBlue','DarkOrange'], legend=["madeup stuff","more madeup stuff"])
 
 pl.show()
 
