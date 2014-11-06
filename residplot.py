@@ -6,7 +6,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib as mpl
 
 import pylab as pl
-def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=None,ylim=None,color=['k'],alpha=[1], marker=['o'], scatter=True,LIVE=False, fig=None):
+def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=None,ylim=None,color=['k'],alpha=[1], marker=['o'], scatter=True,LIVE=False, fig=None, legend=None):
 
     if LIVE:
         pl.ion()
@@ -32,7 +32,6 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     ax_width = 1-left_offset - right_offset
     ax_height = (1-top_offset - bottom_offset - hgap)/2
     
-    
     left, width = 0.1, 0.65
     bottom, height = 0.1, 0.65
     bottom_h = left_h = left + width 
@@ -49,17 +48,20 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     pl.setp(ax1.get_xticklabels(),
             visible=False)    
     import numpy as np
-    if (not isinstance(x, list) or not isinstance(x[0], list)) and (not isinstance(x, np.ndarray ) or not (isinstance(x[0], list) or isinstance(x[0], np.ndarray))):
-        try: 
-            print len(xs)
-        except:
+    if not isinstance(x, list) and not isinstance(x, np.ndarray):
+        x=  [[x]]
+        y=  [[y]]
+        res=[[res]]
+        scatter=[[scatter]]
+        if err:
+            err=[[err]]
+    elif not isinstance(x[0], list) and not isinstance(x[0], np.ndarray ):
             x=  [x]
             y=  [y]
             res=[res]
             scatter=[scatter]
-            print scatter
             if err:
-                err=err[i]
+                err=[err]
 
     if len(alpha)<len(x):
         alpha=alpha*len(x)
@@ -67,25 +69,36 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
         color=color*len(x)
     if len(marker)<len(x):
         marker=marker*len(x)
+        
+    print x,len(x)
     for i in range(len(x)):
+        label=''
+        if isinstance(legend,str):
+            label=legend
+        elif ( isinstance(legend, np.ndarray ) or isinstance(legend, list)):
+            try: label=legend[i]
+            except:label=''                 
+
         if err and not (err[i]==None):
             if scatter[i]:
-                ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], fmt='.')            
+                   ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], fmt='.', label=label)            
             else:
-                ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i])                            
-        elif scatter[i]:
-#            print "here",x[i],y[i]
-            ax1.scatter(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i])
+                   ax1.errorbar(x[i],y[i],yerr=err[i],color=color[i],alpha=alpha[i], marker=marker[i], label=label)                            
+                                                                
+        elif scatter:
+            ax1.scatter(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i], label=label)
         else:
-            ax1.plot(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i]) 
+            ax1.plot(x[i],y[i],color=color[i],alpha=alpha[i], marker=marker[i], label=label) 
         if LIVE:
             pl.draw()
     
         try: 
             res[i].all()==None
-            axres.scatter(x[i],res[i],color=color[i],alpha=alpha[i])
+            axres.scatter(x[i],res[i],color=color[i],alpha=alpha[i], label=legend)
         except:
             pass
+        if legend:
+            ax1.legend(fontsize=12)
     
     majorLocatory   = MultipleLocator((axres.get_ylim()[1]-axres.get_ylim()[0])/3)  
     axres.yaxis.set_major_locator(majorLocatory)
@@ -95,6 +108,7 @@ def plotwresids(x,y,res,err=None,xlabel="",ylabel="",reslabel="residuals",xlim=N
     
     axres.set_xlabel(xlabel)
     ax1.set_ylabel(ylabel)
+    axres.set_yticks(axres.get_yticks()[:-2])
     axres.set_ylabel(reslabel)
     axres.yaxis.set_major_formatter(majorFormatterresy)
 
